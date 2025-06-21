@@ -12,6 +12,14 @@ public class ex_04 {
         sb.reverse();
         System.out.println(sb);
 
+        String s= "Java";
+        char c = s.charAt(2);
+        // Index = 0, ->
+        System.out.println(c);
+
+        System.out.println(s.codePointAt(0));
+
+
 
 
 
