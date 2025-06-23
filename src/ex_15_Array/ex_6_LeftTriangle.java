@@ -16,3 +16,4 @@ public class ex_6_LeftTriangle {
         }
     }
 }
+
