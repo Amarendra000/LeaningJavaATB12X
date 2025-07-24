@@ -1,0 +1,121 @@
+ Test Plan for IsValidISBN10 SOAP API:-
+
+🔹 1. Overview
+The purpose of this test plan is to validate the functionality, correctness, robustness, and response structure of the IsValidISBN10 web service endpoint provided by:
+
+nginx
+Copy
+Edit
+POST https://webservices.daehosting.com/services/isbnservice.wso
+The service validates whether a given ISBN-10 number is correct according to checksum rules.
+
+🔹 2. API Information
+Endpoint: /services/isbnservice.wso
+
+Protocol: HTTP/HTTPS
+
+Methods Supported:
+
+SOAP 1.1
+
+SOAP 1.2
+
+JSON (alternative)
+
+Input Parameter:
+
+sISBN (string): ISBN-10 formatted number (e.g., "0-7475-3269-9")
+
+Output:
+
+boolean: true if valid, false otherwise
+
+🔹 3. Test Objectives
+Verify the API accepts valid ISBN-10 inputs and returns correct validation result.
+
+Ensure incorrect formats or invalid checksums return false.
+
+Ensure response format matches SOAP 1.1, SOAP 1.2, and JSON expectations.
+
+Check error handling for missing or malformed input.
+
+🔹 4. Test Scenarios & Cases
+✅ 4.1 Positive Test Cases
+Test Case ID	Test Description	Input (sISBN)	Expected Output
+TC01	Valid ISBN-10 with dashes	0-7475-3269-9	true
+TC02	Valid ISBN-10 without dashes	0747532699	true
+TC03	Valid ISBN ending with 'X'	030640615X	true
+
+❌ 4.2 Negative Test Cases
+Test Case ID	Test Description	Input (sISBN)	Expected Output
+TC04	Invalid checksum	0747532698	false
+TC05	Non-numeric input	abcdefghij	false
+TC06	Less than 10 digits	1234567	false
+TC07	More than 10 digits	12345678901	false
+TC08	Empty input	``	false or error
+TC09	Special characters	@@@###****	false
+TC10	Input only 'X'	X	false
+
+📦 4.3 Boundary Test Cases
+Test Case ID	Test Description	Input	Expected Output
+TC11	9 digits and an X	123456789X	depends on checksum validity
+TC12	10 zeroes	0000000000	false
+
+🔀 4.4 Protocol Validation
+Test Case ID	Description	Protocol	Input	Expected Format
+TC13	SOAP 1.1 format validation	SOAP 1.1	Valid ISBN	SOAP XML
+TC14	SOAP 1.2 format validation	SOAP 1.2	Valid ISBN	SOAP XML
+TC15	JSON input/output validation	JSON	Valid ISBN	JSON with boolean
+
+🔹 5. Non-Functional Testing
+🧪 Performance
+Test Case: Send 1000 requests with valid and invalid ISBNs.
+
+Expected Result: Response time < 2 seconds, no crashes or memory issues.
+
+🔐 Security
+Validate that no PII or sensitive information is leaked in error messages.
+
+Check response headers for security best practices (e.g., CORS, cache control).
+
+🔹 6. Test Data Preparation
+✅ Valid ISBNs
+0471958697
+
+0321534964
+
+0306406152
+
+030640615X
+
+❌ Invalid ISBNs
+1234567890
+
+0306406151
+
+ABCDEFGHIJ
+
+🔹 7. Tools & Environment
+Tools: Postman, SoapUI, JMeter (for load), Python (requests + zeep for SOAP)
+
+Environments:
+
+Staging: (if provided)
+
+Production: https://webservices.daehosting.com/services/isbnservice.wso
+
+🔹 8. Reporting & Logging
+Log all test requests/responses.
+
+Track test case ID, input, expected vs actual result, timestamp, and protocol used.
+
+🔹 9. Test Entry & Exit Criteria
+✅ Entry: WSDL/API URL accessible, test tool configured
+
+🛑 Exit: All test cases passed or defects logged; regression testing done post fixes
+
+🔹 10. Risks & Mitigation
+Risk	Mitigation
+WSDL changes or host unavailability	Local mocking / retry mechanism
+No API rate limit mentioned	Run throttled load tests only
+
